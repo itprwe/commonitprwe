@@ -1,0 +1,98 @@
+压测-- 
+
+1.JAXB：完成Java类和XML的互相映射
+2.Java对象可以通过特定的注解或者依照规范被转换为XML，这种转换称之为映射
+3.互相转换的方式
+JAXB 的 xjc 工具定义 schema 通过XSD（XML Schema Definition）文档生成Java类的方式。
+Java Annotation 注解 JAXB通过分析java类中的标记（annotation），将java类转换为相应的XML文档
+4.@XmlRootElement   -  类级别的注解。将类映射为xml全局元素，也就是根元素
+参数 name
+name属性用于指定生成元素的名字，若不指定，默认使用类名小写作为元素名。
+参数 namespace
+namespace属性用于指定生成的元素所属的命名空间
+5.@XmlType - 类级别的注解，常与@XMLRootElement，@XmlAccessorType一起使用
+参数 name
+定义XML Schema中type的名称
+参数 namespace
+指定Schema中的命名空间
+参数 propOrder
+指定映射XML时的节点顺序，使用该属性时，必须列出JavaBean对象中的所有字段，否则会报错
+参数 factoryClass
+指定UnMarshal时生成映射类实例所需的工厂类，默认为这个类本身
+参数 factoryMethod
+指定工厂类的工厂方法
+6.@XmlAccessorType - 类级别的注解。定义这个类中的何种类型需要映射到XML
+参数 value
+参数 value 可以接受4个指定值，这几个值是枚举类型，方便调用：
+XmlAccessType.FIELD：映射这个类中的所有字段到XML
+XmlAccessType.PROPERTY：映射这个类中的属性（get/set方法）到XML
+XmlAccessType.PUBLIC_MEMBER：将这个类中的所有public的field或property同时映射到XML（默认）
+XmlAccessType.NONE：不映射
+
+7.@XmlElement - 字段，方法，参数级别的注解。该注解可以将被注解的（非静态）字段，或者被注解的get/set方法对应的字段映射为本地元素，也就是子元素
+参数 name
+用于指定映射时的节点名称，指定生成元素的名字，若不指定，默认使用方法名小写作为元素名。
+参数 namespace
+指定映射时的节点命名空间
+参数 required
+字段是否必须，默认为false
+参数 nillable
+是否处理空数据，默认为false
+参数 type
+定义该字段或属性的关联类型
+8.@XmlAttribute - 字段和方法级别的注解。该注解会将字段或get/set方法对应的字段映射成本类对应元素的属性。
+参数 name
+用于指定映射时的节点属性名称，若不指定，默认使用方法名小写作为元素名。
+参数 namespace
+指定映射时的节点属性命名空间
+参数 required
+该属性是否必须，默认为false
+9.@XmlTransient - 类，字段，方法级别的注解。定义某一字段或属性不需要被映射。该注解与所有其他JAXB注释相互排斥，也就是说与其他注释连用就会报错。 和某些框架中的Ignore注解相同
+
+10.
+Serializable是一个对象序列化的接口，一个类只有实现了Serializable接口
+transient
+
+11.@Configuration
+@Configuration用于定义配置类，可替换xml配置文件，被注解的类内部包含有一个或多个被@Bean注解的方法，这些方法将会被AnnotationConfigApplicationContext或AnnotationConfigWebApplicationContext类进行扫描，并用于构建bean定义，初始化Spring容器
+
+
+12.mongo
+
+13.lombok的话，可以直接使用@Builder注解来实现
+
+14.ExecutorService
+
+15.
+各个类实现InitializingBean接口，在初始化bean的时候都会执行该afterPropertiesSet()方法
+在afterPropertiesSet()方法中executorService = Executors.newFixedThreadPool(threadCount);返回一个executorService对象
+
+16.
+ExecutorService executorService = Executors.newFixedThreadPool(3);
+for (int i = 0; i < 5; i++) {
+            MyThread myThread1 = new MyThread();
+            executorService.execute(myThread1);
+        }
+3个线程 并运行executorService.execute(myThread1);运行完了后再3个线程运行；直到跳出循环；
+
+//
+ public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        int count = 20;
+        while (count > 0) {
+
+            executorService.execute(() -> {
+                try {
+                    System.out.println("多线程开始，，，" + Thread.currentThread().getName());
+                    Thread.sleep(500);
+                    System.out.println("多线程结束，，，" + Thread.currentThread().getName());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            System.out.println("count = " + count);
+            count--;
+        }
+        System.out.println("out,,,");
+    }
+外部和 execute并行运行，外部可以先执行完，execute开始按照设置的线程数多线程运行，直到count结束
