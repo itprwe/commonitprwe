@@ -1,0 +1,55 @@
+chrome//
+postman
+fiddler
+vs
+python
+jmeter
+jeknis
+maven//
+jdk 1.8//
+git 2.26.2//
+idea 219.3//
+mysql  8.0.15   root//
+①安装服务：mysqld --install
+②初始化：　mysqld --initialize --console
+③开启服务：net start mysql
+④关闭服务：net stop mysql
+⑤登录mysql：mysql -u root -p
+Enter PassWord：(密码)
+⑥修改密码：alter user 'root'@'localhost' identified by 'root';(by 接着的是密码)
+⑦标记删除mysql服务：sc delete mysql
+
+mongodb
+hive? hbuilder
+redis
+webstorm
+tomcat //
+npp? nosql?xftp?xshell?filezilla?
+dbeaver//
+
+
+配置环境变量
+mysql 
+MYSQL_HOME=D:\software\mysql-8.0.15-winx64
+path 后 %MYSQL_HOME%\bin
+git 
+jdk 
+JAVA_HOME=C:\Program Files\Java\jdk1.8.0_201
+%JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;
+.;%JAVA_HOME%\bin;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar
+maven
+MAVEN_HOME=D:\software\maven\apache-maven-3.3.9
+path hou  ;%MAVEN_HOME%\bin
+
+tomcat
+CATALINA_HOME=D:\software\tomcat-8.0.30
+CATALINA_BASE =D:\software\tomcat-8.0.30
+path hou ;%CATALINA_HOME%\lib;%CATALINA_HOME%\bin;
+
+python
+
+
+
+
+
+
