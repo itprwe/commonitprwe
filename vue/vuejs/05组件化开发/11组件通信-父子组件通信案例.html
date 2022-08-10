@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="app">
+<!-- 父组件的值显示到子组件的input中
+     将子组件input中输入的数值，改变显示到父组件 -->
+  <cpn :number1="num1" :number2="num2" @num1change="num1change" @num2change="num2change"></cpn>
+
+</div>
+
+<template id="cpn1">
+  <div>
+    <h3>props:{{number1}}</h3>
+    <h3>子组件-data:{{dnumber1}}</h3>
+<!--    <input type="text" v-model="dnumber1"> 只能改变子组件的值，不能改变父组件的值，换一个方法-->
+    <input type="text" v-bind:value="dnumber1" @input="numInput1">
+    <h3>props:{{number2}}</h3>
+    <h3>子组件-data:{{dnumber2}}</h3>
+    <input type="text" v-bind:value="dnumber2" @input="numInput2">
+<!--    <input type="text" v-model="dnumber2">-->
+  </div>
+</template>
+<script src = 'https://unpkg.com/vue/dist/vue.js'></script>
+<script>
+  const app = new Vue({
+    el : '#app',
+    data : {
+      num1:1,
+      num2:2
+    },
+    methods : {
+      num1change(value){
+        this.num1 = parseInt(value)
+      },
+      num2change(value){
+        this.num2 = parseInt(value)
+      }
+    },
+    components:{
+      cpn:{
+        template:'#cpn1',
+        props:{
+          number1:Number,
+          number2:Number//由父组件进行修改，不赞成子组件直接修改
+        },
+        data(){
+          return{
+            dnumber1:this.number1,
+            dnumber2:this.number2
+          }
+        },
+        methods: {
+          numInput1(event){
+            //将input中的value赋值到子组件的dnumber中
+            this.dnumber1 = event.target.value
+            //为了让父组件可以接受，发送一个事件
+            this.$emit('num1change',this.dnumber1)
+            //同时将dnumber2的值改为dnumber1的100倍
+            this.dnumber2 = this.dnumber1 * 100
+            //再将改后的dnumber2值传给对应的父组件
+            this.$emit('num2change',this.dnumber2)
+          },
+          numInput2(event){
+            this.dnumber2 = event.target.value
+            this.$emit('num2change',this.dnumber2)
+          }
+        }
+      }
+    }
+  })
+</script>
+</body>
+</html>

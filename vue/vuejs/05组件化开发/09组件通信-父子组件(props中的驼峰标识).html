@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="app">
+  <p>{{ counter }}</p>
+  <cpn :c-info="info"></cpn>
+</div>
+
+<template id="cpn1">
+  <div>
+    <h3>我是子组件</h3>
+    <p>{{cInfo}}</p>
+  </div>
+</template>
+
+<script src = 'https://unpkg.com/vue/dist/vue.js'></script>
+<script>
+
+  const cpn = {
+    template:'#cpn1',
+    props:{
+      cInfo:{
+        type:Object,
+        default() {
+          return {};
+        }
+      }
+    }
+  }
+
+  const app = new Vue({
+    el : '#app',
+    data : {
+      counter : 0,
+      info:{
+        name:'itprwe',
+        age:22,
+        height:1.66
+      }
+    },
+    methods : {
+
+    },
+    components:{
+      cpn
+    }
+  })
+</script>
+
+</body>
+</html>

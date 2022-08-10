@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table,table tr th, table tr td { border:1px solid #0094ff; }
+    </style>
+</head>
+<body>
+      <div id='app'>
+        <p>{{ message }}</p>
+
+        <div v-if = "bookLists.length">
+            <table>
+                <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>书籍名称</td>
+                        <td>出版日期</td>
+                        <td>价格</td>
+                        <td>购买数量</td>
+                        <td>操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for = "(item,index) in bookLists">
+                        <td>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.date}}</td>
+                        <!-- <td>{{getFinalprice(item.price)}}</td> -->
+                        <td>{{item.price | showPrice}}</td>
+                        <td>
+                            <button @click="sub(index)" :disabled="item.count <=1">-</button>
+                            <span>{{item.count}}</span>
+                            <button @click="add(index)">+</button>
+                        </td>
+                        <td>
+                            <button @click="remove(index)">移除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <span>总价：{{ totalPrice | showPrice }}</span>
+        </div>
+        <span v-else>购物车为空</span>
+      </div>
+    
+      <script src = 'https://unpkg.com/vue/dist/vue.js'></script>
+      <script>
+    
+        const app = new Vue({
+          el : '#app',
+          data : {
+            message : 'hello',
+            bookLists:[
+                {
+                    id:1,
+                    name:'《算法导论》',
+                    date : '2006-9',
+                    price : '85.0',
+                    count:1
+                },
+                {
+                    id:2,
+                    name:'《UNIX编程艺术》',
+                    date : '2006-2',
+                    price : '59.0',
+                    count:1
+                },
+                {
+                    id:3,
+                    name:'《编程思想》',
+                    date : '2006-2',
+                    price : '52.0',
+                    count:1
+                }
+            ]
+           }, 
+          methods : {
+              add(index){
+                  this.bookLists[index].count++
+              },
+              sub(index){
+                this.bookLists[index].count--
+              },
+              remove(index){
+                  this.bookLists.splice(index,1)
+              },
+              getFinalprice(price){
+                return '￥'+price
+              }
+    
+          },
+          filters:{
+                showPrice(price){
+                    return '￥'+price
+                }
+          },
+          computed:{
+              totalPrice(){
+                  let totalPrice = 0
+                //   for(let i = 0; i < this.bookLists.length;i++){
+                // for(let i in  this.bookLists){
+                for(let book of  this.bookLists){
+                    totalPrice += book.count * book.price
+                  }
+                  return totalPrice
+              }
+          }
+        })
+    
+      </script>
+</body>
+</html>

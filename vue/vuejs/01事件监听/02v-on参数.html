@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <div id='app'>
+    <p>{{ message }}</p>
+    <button @click = "btnClick()">按钮1</button>
+    <button @click = "btnClick">按钮2</button>
+    <button @click = "btn2Click(123)">按钮3</button>
+    <button @click = "btn3Click">按钮4</button>
+    <button @click = "btn4Click('asdf')">按钮5</button>
+    <button @click = "btn5Click('asdfg',$event)">按钮6</button>
+  </div>
+
+  <script src = 'https://unpkg.com/vue/dist/vue.js'></script>
+  <script>
+
+    const app = new Vue({
+      el : '#app',
+      data : {
+        message : 'asdfd'
+       },
+      methods : {
+        btnClick(){
+          console.log("click")
+        },
+        btn2Click(name){ 
+          console.log('-------',name)
+        },
+        btn3Click(event){
+          console.log('-------',event)
+        },
+        btn4Click(abc){
+          console.log('-------',abc,event)
+        },
+        btn5Click(abc,event){
+          console.log('-------',abc,event)
+        }
+
+      }
+    })
+
+  </script>
+</body>
+</html>

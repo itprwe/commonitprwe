@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+<div id='app'>
+  <p>{{ message }}</p>
+  <cpn1></cpn1>
+  <cpn1></cpn1>
+  <cpn1></cpn1>
+</div>
+
+
+<template id="cpn1">
+
+  <div>
+    <h2>当前计数是：{{ counter }}</h2>
+    <button @click='counter++'>+</button>
+    <button @click='counter--'>-</button>
+    <br>
+    <button @click='add'>+</button>
+    <button @click='sub'>-</button>
+  </div>
+
+</template>
+
+<script src='https://unpkg.com/vue/dist/vue.js'></script>
+<script>
+  Vue.component('cpn1', {
+    template: '#cpn1',
+    data() {
+      return {
+        counter: 0
+      }
+    },
+    methods: {
+
+      add() {
+        this.counter++
+
+      },
+      sub() {
+        this.counter--
+
+      }
+    }
+  })
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello'
+    },
+    methods: {}
+  })
+
+</script>
+</body>
+</html>
