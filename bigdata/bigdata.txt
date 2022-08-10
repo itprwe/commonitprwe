@@ -1,0 +1,129 @@
+bigdata
+容量：大数据应用采集的数据量很大，它们可能产生于不同的来源，例如智能传感器，工业仪表读数，金融业务交易等；
+速度：大数据应用的数据都是高速创建的，所以处理的速度必须快。类似物联网设备，智能仪表设备等都可以以前所未有的速度自动生成数据；
+种类：数据会有多种格式。它可以是数字，文本，音频，视频，卫星采集图像，天气数据等
+
+大数据格式
+结构化数据
+半结构化数据
+非结构化数据
+
+
+大数据项目中的测试通常包含
+功能测试、数据库测试、基础架构测试和性能测试。
+
+制定测试策略
+分段测试
+
+不同阶段 不同测试主体 不同测试目标 不同测试方法
+基本的原则遵循
+基础架构测试——数据库测试——功能测试——性能测试的流程进行。
+
+
+
+大数据技术：Hive（分布式数据仓库）、MongoDB（非关系型数据库）、Hadoop（分布式文件系统）、Spark（分布式计算框架）
+独立搭建大数据相关分布式环境（包括hadoop、spark、hive等）
+Hadoop权威指南(中文)
+Spark核心技术与高级应用中文pdf
+Spark高级数据分析中文pdf版
+Hive编程指南PDF
+
+hadoop 是由java语言编写的，在分布式服务器集群上存储海量数据并运行分布式分析应用的开源框架，其核心部件是HDFS与MapReduce
+Hadoop的框架最核心的设计就是：HDFS和MapReduce。HDFS为海量的数据提供了存储，则MapReduce为海量的数据提供了计算
+
+hive  Hive是基于Hadoop的一个数据仓库工具；它是MapReduce的一个封装，底层就是MapReduce程序，Hive就是把sql语句转化为MapReduce程序， 执行延迟比较高，因为hive常用于数据分析的，对实时性要求不高
+    Hive常用于数据分析，适合处理离线数据（静态数据）
+    Hive中处理的结构化数据存储在HDFS中，元数据存储在mysql的Meta store中
+    Hive是针对数据仓库设计的，主要用于读，所有的数据在加载时已经确定好，适合处理静态数据
+    mysql适合处理数据的增删改查，适合处理实时数据（动态数据）
+    -Hive是一种类SQL的引擎
+    针对一系列的存储，弄出一个SQL的接口出来了，不是数据库
+    sql查询引擎
+HDFS 实现将文件分布式存储在很多的服务器上，多台机器组成的一个文件系统
+hbase 适合于非结构化数据存储的数据库.所谓非结构化数据存储就是说HBase是基于列的而不是基于行的模式
+    Hbase是一种在Hadoop之上的NoSQL 的Key/vale数据库
+spark 在Hadoop基础上的一种改进
+flink 
+kafka
+zookeeper
+presto sql查询引擎
+clickhouse 大数据实时分析的列式数据库管理系统，而非数据库
+
+
+数据库===========================================
+SQL数据库中数据处理时，有时候需要建立临时表，将查询后的结果集放到临时表中，然后在针对这个数据进行操作
+临时表与永久表相似，只是它的创建是在Tempdb中，它只有在一个数据库连接结束后或者由SQL命令DROP掉，才会消失
+
+left join(左联接) 返回包括左表中的所有记录和右表中联结字段相等的记录 
+right join(右联接) 返回包括右表中的所有记录和左表中联结字段相等的记录
+inner join(等值连接) 只返回两个表中联结字段相等的行
+
+clickhouse:
+bitmapBuild(array) --从无符号整型（UInt8、UInt32、UInt64等）array构造bitmap
+select bitmapBuild([1, 2, 3, 4, 5]);
+
+bitmapToArray(bitmap) --将bitmap转成整型array
+SELECT bitmapToArray(bitmapBuild([1, 2, 3, 4, 5])) AS res;
+
+bitmapSubsetInRange(bitmap, range_start, range_end) --返回bitmap中，range_start到range_end区间内（不包含renge_end）的子集bitmap对象
+SELECT bitmapToArray(bitmapSubsetInRange(bitmapBuild([10,11,28,30,31,32,33,100,200,500]), toUInt32(30), toUInt32(200))) AS res;
+
+bitmapSubsetLimit(bitmap, range_start, cardinality_limit)--返回bitmap中，从range_start开始的cardinality_limit个元素组成的子集bitmap对象
+SELECT bitmapToArray(bitmapSubsetLimit(bitmapBuild([9,10,11,26,27,30,31,32,33,100,200,500]), toUInt32(30), toUInt32(200))) AS res;
+
+bitmapContains(bitmap, e)--判断指定bitmap中是否存在e元素
+SELECT bitmapContains(bitmapBuild([1,5,7,9]), toUInt32(9)) AS res;
+
+bitmapHasAny(bitmap1, bitmap2)--bitmap1中是否包含bitmap2中的元素，只要有一个相同的元素，就返回1，否则返回0.
+SELECT bitmapHasAny(bitmapBuild([1,2,3]),bitmapBuild([3,4,5])) AS res;
+
+bitmapHasAll(bitmap,bitmap)--bitmap1中是否全部包含bitmap2中的元素，全部包含就返回1，否则返回0.
+SELECT bitmapHasAll(bitmapBuild([1,2,3]),bitmapBuild([3,2])) AS res;
+
+bitmapCardinality(bitmap)--返回bitmap的基数
+SELECT bitmapCardinality(bitmapBuild([1, 2, 3, 4, 5])) AS res;
+
+bitmapTransform(bitmap, from_array, to_array)--将bitmap中的元素进行转换，将存在于from_array的元素，一次转换成to_array的对应元素。
+SELECT bitmapToArray(bitmapTransform(bitmapBuild([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), cast([5,999,2] as Array(UInt32)), cast([2,888,20] as Array(UInt32)))) AS res;
+
+bitmapAnd(bitmap,bitmap)--求两个bitmap的交集
+SELECT bitmapToArray(bitmapAnd(bitmapBuild([1,2,3]),bitmapBuild([3,4,5]))) AS res;
+
+bitmapOr(bitmap,bitmap)--求两个bitmap的并集
+SELECT bitmapToArray(bitmapOr(bitmapBuild([1,2,3]),bitmapBuild([3,4,5]))) AS res;
+
+bitmapXor(bitmap,bitmap)--求两个bitmap的异或
+SELECT bitmapToArray(bitmapXor(bitmapBuild([1,2,3]),bitmapBuild([3,4,5]))) AS res;
+
+bitmapAndnot(bitmap1,bitmap2)--求bitmap1与bitmap2的与非
+SELECT bitmapToArray(bitmapAndnot(bitmapBuild([1,2,3]),bitmapBuild([3,4,5]))) AS res;
+
+bitmapCardinality，UInt64类型的数值，表示bitmap对象的基数 = count(distinct) 
+groupBitmap(XXX)=count(distinc XXX)
+groupBitmapState(XXX) 将字符串数组图像化
+解开bitmapToArray(groupBitmapState(toUInt64(uid)))
+groupBitmapMergeState=将多个bitmap和一起
+bitmapCardinality(groupBitmapMergeState(uv))
+select label,bitmapCardinality(groupBitmapMergeState(uv)) as uv
+from testbit
+group by label;
++-----+----+
+|label|uv  |
++-----+----+
+|女    |1146|
+|男    |1253|
++-----+----+
+
+bigdata 
+data 
+结构化数据 ： 即固定格式和有限长度的数据
+非结构化数据 ： 网页 语音 图片 视频 等
+半结构数据 ： 一些XML或者HTML的格式
+
+4 v
+大量化（Volume）
+多样化（Variety）
+快速化（Velocity）
+价值（Value）
+
+人工智能就是使用各种算法（方法）找到大数据背后的规律，然后将规律应用
